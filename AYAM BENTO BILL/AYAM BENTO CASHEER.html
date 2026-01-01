@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>AYAM BENTO 24</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+        .container {
+            width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #ff7a00;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        button {
+            background: #ff7a00;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #e96c00;
+        }
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th {
+            background: #ff7a00;
+            color: white;
+            padding: 6px;
+        }
+        td {
+            padding: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>AYAM BENTO 24</h2>
+
+    <label>Pilih Menu</label>
+    <select id="menu">
+        <option value="12000">Ayam Geprek</option>
+        <option value="18000">Rice Bowl Ayam Cabe Garam</option>
+        <option value="12000">Mie Nyemek</option>
+        <option value="18000">Rice Bowl Ayam Teriyaki</option>
+        <option value="11000">Sosis Geprek</option>
+        <option value="9000">Telur Geprek</option>
+        <option value="12000">Rice Bowl Tahu Cabe Garam</option>
+        <option value="3000">Es/Hangat Teh</option>
+        <option value="4000">Es/Hangat Jeruk</option>
+        <option value="9000">Es/Hangat Milo</option>
+    </select>
+
+    <label>Jumlah</label>
+    <input type="number" id="jumlah" value="1" min="1">
+
+    <button onclick="tambah()">Tambah Pesanan</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Menu</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody id="tabelPesanan">
+            <!-- Pesanan masuk di sini -->
+        </tbody>
+    </table>
+
+    <p><b>Total: <span id="total">Rp 0</span></b></p>
+
+    <label>Uang Dibayar</label>
+    <input type="number" id="bayar" min="0">
+
+    <button onclick="hitungKembalian()">Hitung Kembalian</button>
+    <button onclick="reset()">Reset</button>
+
+    <p><b>Kembalian: <span id="kembalian">Rp 0</span></b></p>
+</div>
+
+<script>
+    let total = 0;
+    let no = 1;
+
+    function formatRupiah(angka) {
+        return "Rp " + angka.toLocaleString("id-ID");
+    }
+
+    function tambah() {
+        let menu = document.getElementById("menu");
+        let nama = menu.options[menu.selectedIndex].text;
+        let harga = parseInt(menu.value);
+        let jumlah = parseInt(document.getElementById("jumlah").value);
+
+        if (jumlah <= 0 || isNaN(jumlah)) {
+            alert("Jumlah tidak valid!");
+            return;
+        }
+
+        let subtotal = harga * jumlah;
+        total += subtotal;
+
+        let tbody = document.getElementById("tabelPesanan");
+        let row = tbody.insertRow();
+
+        row.insertCell(0).innerText = no++;
+        row.insertCell(1).innerText = nama;
+        row.insertCell(2).innerText = formatRupiah(harga);
+        row.insertCell(3).innerText = jumlah;
+        row.insertCell(4).innerText = formatRupiah(subtotal);
+
+        document.getElementById("total").innerText = formatRupiah(total);
+    }
+
+    function hitungKembalian() {
+        let bayar = parseInt(document.getElementById("bayar").value);
+
+        if (isNaN(bayar)) {
+            alert("Masukkan uang bayar!");
+            return;
+        }
+
+        let kembalian = bayar - total;
+
+        if (kembalian >= 0) {
+            document.getElementById("kembalian").innerText = formatRupiah(kembalian);
+        } else {
+            alert("Uang tidak cukup!");
+        }
+    }
+
+    function reset() {
+        total = 0;
+        no = 1;
+        document.getElementById("tabelPesanan").innerHTML = "";
+        document.getElementById("total").innerText = "Rp 0";
+        document.getElementById("kembalian").innerText = "Rp 0";
+        document.getElementById("bayar").value = "";
+    }
+</script>
+
+</body>
+</html>
